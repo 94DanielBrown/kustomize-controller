@@ -69,6 +69,7 @@ import (
 
 	kustomizev1 "github.com/fluxcd/kustomize-controller/api/v1"
 	"github.com/fluxcd/kustomize-controller/internal/decryptor"
+	"github.com/fluxcd/kustomize-controller/internal/features"
 	"github.com/fluxcd/kustomize-controller/internal/inventory"
 )
 
@@ -776,7 +777,11 @@ func (r *KustomizationReconciler) apply(ctx context.Context,
 		if changeSet != nil && len(changeSet.Entries) > 0 {
 			resultSet.Append(changeSet.Entries)
 
-			log.Info("server-side apply for cluster definitions completed", "output", changeSet.ToMap())
+			if ok, _ := features.Enabled(features.ElasticsearchLogging); ok {
+				log.Info("server-side apply for cluster definitions completed", "output", changeSet.ToGroupedMap())
+			} else {
+				log.Info("server-side apply for cluster definitions completed", "output", changeSet.ToMap())
+			}
 			for _, change := range changeSet.Entries {
 				if HasChanged(change.Action) {
 					changeSetLog.WriteString(change.String() + "\n")
@@ -802,7 +807,11 @@ func (r *KustomizationReconciler) apply(ctx context.Context,
 		if changeSet != nil && len(changeSet.Entries) > 0 {
 			resultSet.Append(changeSet.Entries)
 
-			log.Info("server-side apply for cluster class types completed", "output", changeSet.ToMap())
+			if ok, _ := features.Enabled(features.ElasticsearchLogging); ok {
+				log.Info("server-side apply for cluster definitions completed", "output", changeSet.ToGroupedMap())
+			} else {
+				log.Info("server-side apply for cluster definitions completed", "output", changeSet.ToMap())
+			}
 			for _, change := range changeSet.Entries {
 				if HasChanged(change.Action) {
 					changeSetLog.WriteString(change.String() + "\n")
@@ -828,8 +837,11 @@ func (r *KustomizationReconciler) apply(ctx context.Context,
 
 		if changeSet != nil && len(changeSet.Entries) > 0 {
 			resultSet.Append(changeSet.Entries)
-
-			log.Info("server-side apply completed", "output", changeSet.ToMap(), "revision", revision)
+			if ok, _ := features.Enabled(features.ElasticsearchLogging); ok {
+				log.Info("server-side apply for cluster definitions completed", "output", changeSet.ToGroupedMap())
+			} else {
+				log.Info("server-side apply for cluster definitions completed", "output", changeSet.ToMap())
+			}
 			for _, change := range changeSet.Entries {
 				if HasChanged(change.Action) {
 					changeSetLog.WriteString(change.String() + "\n")

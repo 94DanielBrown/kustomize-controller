@@ -44,6 +44,9 @@ const (
 	// should fail if a variable without a default value is declared in files
 	// but is missing from the input vars.
 	StrictPostBuildSubstitutions = "StrictPostBuildSubstitutions"
+
+	// ElasticsearchLogging groups log output to reduce cardinality in Elasticsearch/Opensearch
+	ElasticsearchLogging = "ElasticsearchLogging"
 )
 
 var features = map[string]bool{
@@ -59,6 +62,8 @@ var features = map[string]bool{
 	// StrictPostBuildSubstitutions
 	// opt-in from v1.3
 	StrictPostBuildSubstitutions: false,
+	// ElasticsearchLogging
+	ElasticsearchLogging: false,
 }
 
 // FeatureGates contains a list of all supported feature gates and
